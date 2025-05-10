@@ -1,6 +1,7 @@
 package com.catfood.store.controllers;
 
 import com.catfood.store.dtos.RegisterUserRequest;
+import com.catfood.store.dtos.UpdateUserRequest;
 import com.catfood.store.dtos.UserDto;
 import com.catfood.store.mappers.UserMapper;
 import com.catfood.store.repositories.UserRepository;
@@ -61,5 +62,30 @@ public class UserController {
         //return null;
         //return userDto;
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PutMapping("/{id}")
+//    public UserDto updateUser(
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable(name = "id") Long id,
+//            UserDto) {}
+            @RequestBody UpdateUserRequest request) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+//            return null;
+            return ResponseEntity.notFound().build();
+        }
+
+//        user.setName(request.getName());
+//        user.setEmail(request.getEmail());
+//
+//        userRepository.save(user);
+//
+//        return ResponseEntity.ok(userMapper.toDto(user));
+
+        userMapper.update(request, user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 }
